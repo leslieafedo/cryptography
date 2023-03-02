@@ -4,6 +4,7 @@ import detect_word
 
 # Brute force code breaker 
 def code_break (cipher_text, key_length):
+    # start code breaker timer
     start_time = time.time()
     broken_text = []
     word_count = []
@@ -30,24 +31,26 @@ def code_break (cipher_text, key_length):
     # sort the indices of the np_word_count_lst from most to least
     sorted_word_count_lst = list(np_word_count_lst.argsort())[::-1]
 
-
     print ('Possible keys and deciphered text: ')
     # print the top 10 from the list of deciphered messages with the most words found 
-    for i in sorted_word_count_lst[:10]:
+    for i in sorted_word_count_lst[:5]:
         print (key_lst[i], ' => ',broken_text[i])
         print ('Number of english words found: ', word_count[i])
         print ('')
 
-
+    # time elapsed for code breaker
     end_time = time.time() - start_time
-    print ('')
     print('Total code break runtime: ', end_time, 's')
 
+    import csv
+    primes_bank = open('code_break_times.csv', mode='a')
+    primes_writer = csv.writer(primes_bank)
+    csv_table = (key_length,end_time)
+    primes_writer.writerow(csv_table)
 
 def main ():
     msg = 'NNPTSEROFCSHGSORSTEITYVENFTMLSAOOFIHEIOUETYATAIONHHEADIDREEEDTOHTVSNSCSERPWDNOWCHHEFEOHSV*'
     code_break(msg, 3)
-
 
 # If transposition_code_break.py is run (instead of imported as a module) call
 # the main() function.

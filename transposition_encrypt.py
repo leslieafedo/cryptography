@@ -1,18 +1,14 @@
-import math 
-import numpy as np
-import re
-
-
+import math, numpy as np, re
 
 # Encryption
 def encrypt(msg, key):
     # convert plaintext to uppercase 
     msg = msg.upper()
-    # strip all alphanumeric charatcer and whitespaces 
+    # strip all non-alphanumeric charatcer and whitespaces 
     msg = re.sub('[\W\_]','',msg)
     cipher = ""
-    
     msg_len = len(msg)
+    # create message and key lists 
     msg_lst = list(msg)
     key_lst = list(key)
     
@@ -43,12 +39,8 @@ def encrypt(msg, key):
                         for row_len in matrix])
     return cipher   
 
-
-
 def main ():
     return True
-
-
 
 # If transposition_encrypt.py is run (instead of imported as a module) call
 # the main() function.

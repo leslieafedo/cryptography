@@ -1,7 +1,6 @@
 import math 
 import numpy as np
 
-
 # Decryption
 def decrypt(cipher_text, key):
     plaintext = ""
