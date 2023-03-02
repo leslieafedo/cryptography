@@ -1,5 +1,8 @@
 import transposition_encrypt
 import transposition_decrypt
+import substitution_encrypt_decrypt
+import vignere_encrypt_decrypt
+
 
 PRIME = 841000001
 GEN = 45678
@@ -17,7 +20,8 @@ def alice ():
     print ('Alice public key, A = ',alice_public_key)
     return alice_public_key
 
-def alice_transposition_encrypt (bob_public_key):
+def alice_encrypt (bob_public_key):
+    txt_msg = 'This is a string'
     # alice's private key
     alice_private_key = 69420
     # calculate shared private key
@@ -25,13 +29,23 @@ def alice_transposition_encrypt (bob_public_key):
     print('Shared secret key, s = ', shared_private_key)
 
     # encrypt message
-    txt_msg = 'This is a string'
     key_string = str(shared_private_key)
-    cipher = transposition_encrypt.encrypt(txt_msg, key_string)
-    print('This is the original text:', txt_msg)
-    print('This is the ciphered text:', cipher)
+    # encrypt using Substitution cipher
+    substitution_cipher = substitution_encrypt_decrypt.encrypt(txt_msg, shared_private_key)
+    # encrypt using transposition cipher
+    transposition_cipher = transposition_encrypt.encrypt(txt_msg, key_string)
+    # encrypt using transposition cipher
+    vignere_cipher = vignere_encrypt_decrypt.encrypt(txt_msg, key_string)
 
-    return cipher
+
+    cipher_lst = [substitution_cipher, transposition_cipher, vignere_cipher]
+    # vignere_cipher = 
+    print('This is the original text:', txt_msg)
+    print('This is the encrypted text (Substitution):', substitution_cipher)
+    print('This is the encrypted text (Transposition):', transposition_cipher)
+    print('This is the encrypted text (Vignere):', vignere_cipher)
+
+    return cipher_lst
 
 
 # bob, receiving from alice
@@ -47,7 +61,7 @@ def bob ():
     return bob_public_key
    
 
-def bob_transposition_decrypt (alice_public_key, cipher):
+def bob_decrypt (alice_public_key, cipher_lst):
     # bob's private key
     bob_private_key = 15056
     print ('Bob private key, b = ',bob_private_key)
@@ -57,11 +71,19 @@ def bob_transposition_decrypt (alice_public_key, cipher):
     
     # decrypt message
     key_string = str(shared_private_key)
-    decipher = transposition_decrypt.decrypt(cipher, key_string)
+    substitution_decipher = substitution_encrypt_decrypt.decrypt(cipher_lst[0], shared_private_key)
+    transposition_decipher = transposition_decrypt.decrypt(cipher_lst[1], key_string)
+    vignere_decipher = vignere_encrypt_decrypt.decrypt(cipher_lst[2], key_string)
 
-    print('This is the ciphered text:', cipher)
-    print('This is the original text:', decipher)
-    return decipher
+    decipher_lst = [substitution_decipher, transposition_decipher, vignere_decipher]
+
+    print('This is the ciphered text (Substitution):', cipher_lst[0])
+    print('This is the ciphered text (Transposition):', cipher_lst[1])
+    print('This is the ciphered text (Vignere):', cipher_lst[2])
+    print('This is the deciphered text (Substitution):', decipher_lst[0])
+    print('This is the deciphered text (Transposition):', decipher_lst[1])
+    print('This is the deciphered text (Vignere):', decipher_lst[2])
+    return decipher_lst
 
 
 
@@ -75,8 +97,8 @@ def main():
     bob_public_key = bob()
 
 
-    cipher = alice_transposition_encrypt(bob_public_key)
-    decipher = bob_transposition_decrypt(alice_public_key, cipher)
+    cipher_lst = alice_encrypt(bob_public_key)
+    decipher_lst = bob_decrypt(alice_public_key, cipher_lst)
 
     
     # key_string = str(secret_key)
